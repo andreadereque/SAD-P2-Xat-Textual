@@ -17,7 +17,7 @@ import java.net.Socket;
  */
 public class MySocket {
     public Socket socket;
-    public BufferedReader bufferedReader;
+   public BufferedReader bufferedReader;
     public PrintWriter printWriter;
     private String host;
 

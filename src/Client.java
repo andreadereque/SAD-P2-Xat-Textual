@@ -1,5 +1,4 @@
 
-import com.sun.org.apache.xpath.internal.compiler.Keywords;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,26 +8,41 @@ import java.io.InputStreamReader;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author entel
  */
 public class Client {
-    public static MySocket mySocket;
-    public static String nick;
 
-    public static void main(String[] args) throws IOException {
+  public static final String HOST = "localhost";
+  public static final int PORT = 5000;
 
+  public static void main(String[] args) throws IOException {
+    MySocket mysocket = new MySocket(HOST, PORT);
+    new Thread() {
+      public void run() {
+        String liniaInput;
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Insert host: ");
-        String host = in.readLine();
-        System.out.print("Insert the port number: ");
-        String port = in.readLine();
-       
-        mySocket = new MySocket(host, Integer.parseInt(port));
+          try {
+            while ((liniaInput = in.readLine()) != null) {
+              mysocket.printLine(liniaInput);
+          }
 
-        
-    }
+          mysocket.close(); 
+        }catch(IOException e) {
+              System.out.println("No s'ha pogut enviar el missatge correctament.\n");
+	             
+        }
+      }
+    }.start();
+    new Thread() {
+      public void run() {
+        String liniaOutput;
+        while ((liniaOutput = mysocket.readLine()) != null) {  
+          System.out.println(liniaOutput);
+      	}
+      }
+    }.start();
 
+  }
 }
